@@ -10,6 +10,9 @@ import { SFSchema, SFUISchema } from '@delon/form';
 export class SysMenuEditComponent implements OnInit {
   record: any = {};
   i: any;
+  menuId: string;
+  typeContent: string;
+
   schema: SFSchema = {
     properties: {
       no: { type: 'string', title: '编号' },
@@ -37,15 +40,23 @@ export class SysMenuEditComponent implements OnInit {
     },
   };
 
+  schemaMenu: SFSchema = {
+    properties: {
+      menuLabel: { type: 'string', title: '菜单名称' },
+      menuUrl: { type: 'string', title: '菜单URL' },
+    },
+    required: ['menuLabel'],
+  };
+
   constructor(
     private modal: NzModalRef,
     private msgSrv: NzMessageService,
     public http: _HttpClient,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    if (this.record.id > 0)
-    this.http.get(`/user/${this.record.id}`).subscribe(res => (this.i = res));
+    // if (this.record.id > 0)
+    //   this.http.get(`/user/${this.record.id}`).subscribe(res => (this.i = res));
   }
 
   save(value: any) {
@@ -57,5 +68,13 @@ export class SysMenuEditComponent implements OnInit {
 
   close() {
     this.modal.destroy();
+  }
+
+  saveMenu(value: any) {
+    this.http.post(`/menu/${this.menuId}/save`, value).subscribe(res => {
+      this.msgSrv.success('保存成功');
+      this.close();
+    });
+
   }
 }

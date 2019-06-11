@@ -22,7 +22,7 @@ export class SysMenuMenuComponent implements OnInit {
     private modal: ModalHelper,
     private nzDropdownService: NzDropdownService,
     private msgSrv: NzMessageService,
-  ) {}
+  ) { }
   url = `/user`;
   searchSchema: SFSchema = {
     properties: {
@@ -120,6 +120,7 @@ export class SysMenuMenuComponent implements OnInit {
   menuId: string;
   public plusMenu(node: any) {
     this.menuId = node.id;
+    this.modal.createStatic(SysMenuEditComponent, { menuId: this.menuId, typeContent: "编辑" }).subscribe(() => this.st.reload());
   }
 
   public editMenu(node: any) {
