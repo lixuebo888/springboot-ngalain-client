@@ -1,17 +1,7 @@
-<!-- <page-header [action]="phActionTpl">
-  <ng-template #phActionTpl>
-    <button (click)="add()" nz-button nzType="primary">新建</button>
-  </ng-template>
-</page-header>
-<nz-card>
-  <sf mode="search" [schema]="searchSchema" (formSubmit)="st.reset($event)" (formReset)="st.reset($event)"></sf>
-  <st #st [data]="url" [columns]="columns"></st>
-</nz-card> -->
-
 <div nz-row>
   <div nz-row nzType="flex" nzJustify="space-around" nzGutter="14">
     <div nz-col nzSpan="8">
-      <nz-card nzTitle="PC端菜单1" nzBordered="true">
+      <nz-card nzTitle="PC端菜单" nzBordered="true">
         <nz-input-group [nzSuffix]="suffixIcon">
           <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue" />
         </nz-input-group>
@@ -19,12 +9,13 @@
           <i nz-icon type="search"></i>
         </ng-template>
         <nz-tree #treeCom [nzData]="nodeList" nzAsyncData="true" [nzSearchValue]="searchValue"
-          (nzClick)="nzEvent($event)" (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)">
+          (nzClick)="nzEvent($event)" (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)"
+          nzShowLine="true" nzExpandAll="true" nzHideUnMatched="true">
 
           <ng-template #nzTreeTemplate let-node>
             <span>
               <span>{{node.title}}</span>
-              <span style="float: right;">
+              <span style=" float: right;">
                 <span nz-tooltip nzTitle="添加"><a><i nz-icon type="plus" theme="outline" style="padding: 0 3px;"
                       (click)="plusMenu(node.origin)"></i></a></span>
                 <span nz-tooltip nzTitle="编辑">
@@ -41,13 +32,6 @@
       </nz-card>
     </div>
     <div nz-col nzSpan="16">
-      <!-- <nz-card nzTitle="菜单信息" nzBordered="true">
-        <sf #sf mode="edit" [schema]="schema" button="none">
-          <div class="modal-footer">
-            <button nz-button type="submit" nzType="primary" (click)="save(sf.value)">保存</button>
-          </div>
-        </sf>
-      </nz-card> -->
     </div>
   </div>
 </div>
