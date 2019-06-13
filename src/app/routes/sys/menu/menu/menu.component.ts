@@ -94,4 +94,11 @@ export class SysMenuMenuComponent implements OnInit {
     console.log(node);
   }
 
+  highLightTest(node: any) {
+    const text = node.title;
+    const searchKey = node.component.nzSearchValue;
+    const index = text.indexOf(searchKey);
+    return ~index ? text.replace(searchKey, `<span class="font-highlight">${searchKey}</span>`) : text
+  }
+
 }

@@ -10,17 +10,20 @@
         </ng-template>
         <nz-tree #treeCom [nzData]="nodeList" nzAsyncData="true" [nzSearchValue]="searchValue"
           (nzClick)="nzEvent($event)" (nzExpandChange)="nzEvent($event)" (nzSearchValueChange)="nzEvent($event)"
-          nzShowLine="true" nzExpandAll="true" nzHideUnMatched="true">
+          nzExpandAll="true" nzHideUnMatched="true">
 
           <ng-template #nzTreeTemplate let-node>
             <span>
-              <span>{{node.title}}</span>
+              <span [class]="node.isSelected">
+                <!-- {{node.title}} -->
+                <span [innerHTML]="highLightTest(node)"></span>
+              </span>
               <span style=" float: right;">
                 <span nz-tooltip nzTitle="添加"><a><i nz-icon type="plus" theme="outline" style="padding: 0 3px;"
                       (click)="plusMenu(node.origin)"></i></a></span>
                 <span nz-tooltip nzTitle="编辑">
                   <a><i nz-icon type="edit" theme="outline" style="padding: 0 3px;"
-                      (click)="editMenu(node.origin)"></i></a></span>
+                      (click)="editMenu(node)"></i></a></span>
                 <span nz-tooltip nzTitle="删除">
                   <a><i nz-icon type="delete" theme="outline" style="padding: 0 3px;"
                       (click)="deleteMenu(node.origin)"></i></a></span>
