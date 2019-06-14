@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { _HttpClient, ModalHelper } from '@delon/theme';
-import {
-  NzTreeComponent,
-  NzFormatEmitEvent,
-} from 'ng-zorro-antd';
+import { NzTreeComponent, NzFormatEmitEvent, NzMessageService } from 'ng-zorro-antd';
 import { SysMenuEditComponent } from '../edit/edit.component';
 
 @Component({
@@ -11,10 +8,7 @@ import { SysMenuEditComponent } from '../edit/edit.component';
   templateUrl: './menu.component.html',
 })
 export class SysMenuMenuComponent implements OnInit {
-  constructor(
-    private http: _HttpClient,
-    private modal: ModalHelper,
-  ) { }
+  constructor(private http: _HttpClient, private modal: ModalHelper, private msgSrv: NzMessageService) {}
 
   nodes = [
     {
@@ -66,6 +60,8 @@ export class SysMenuMenuComponent implements OnInit {
   @ViewChild('treeCom') treeCom: NzTreeComponent;
   searchValue: any;
 
+  menuType: string; // 1添加,2编辑
+
   ngOnInit() {
     this.getNodes();
   }
@@ -77,28 +73,31 @@ export class SysMenuMenuComponent implements OnInit {
   }
 
   nzEvent(event: NzFormatEmitEvent): void {
-    console.log(event, this.treeCom.getMatchedNodeList().map(v => v.title), this.treeCom.getExpandedNodeList());
+    // console.log(event, this.treeCom.getMatchedNodeList().map(v => v.title), this.treeCom.getExpandedNodeList());
   }
-
-  menuId: string;
   public plusMenu(node: any) {
-    this.menuId = node.id;
-    this.modal.createStatic(SysMenuEditComponent, { menuId: this.menuId, typeContent: "编辑" }).subscribe(res => this.getNodes());
+    this.modal
+      .createStatic(SysMenuEditComponent, { menuType: 1, typeContent: '添加', node })
+      .subscribe(res => this.getNodes());
   }
 
   public editMenu(node: any) {
-    console.log(node);
+    this.modal
+      .createStatic(SysMenuEditComponent, { menuType: 2, typeContent: '编辑', node })
+      .subscribe(res => this.getNodes());
   }
 
   public deleteMenu(node: any) {
-    console.log(node);
+    this.http.post(`/menu/${node.id}/delete`).subscribe(res => {
+      this.getNodes();
+      this.msgSrv.success('删除成功');
+    });
   }
 
   highLightTest(node: any) {
     const text = node.title;
     const searchKey = node.component.nzSearchValue;
     const index = text.indexOf(searchKey);
-    return ~index ? text.replace(searchKey, `<span class="font-highlight">${searchKey}</span>`) : text
+    return ~index ? text.replace(searchKey, `<span class="font-highlight">${searchKey}</span>`) : text;
   }
-
 }

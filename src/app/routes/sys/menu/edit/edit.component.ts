@@ -8,37 +8,9 @@ import { SFSchema, SFUISchema } from '@delon/form';
   templateUrl: './edit.component.html',
 })
 export class SysMenuEditComponent implements OnInit {
-  record: any = {};
-  i: any;
-  menuId: string;
+  menuType: number;
   typeContent: string;
-
-  schema: SFSchema = {
-    properties: {
-      no: { type: 'string', title: '编号' },
-      owner: { type: 'string', title: '姓名', maxLength: 15 },
-      callNo: { type: 'number', title: '调用次数' },
-      href: { type: 'string', title: '链接', format: 'uri' },
-      description: { type: 'string', title: '描述', maxLength: 140 },
-    },
-    required: ['owner', 'callNo', 'href', 'description'],
-  };
-  ui: SFUISchema = {
-    '*': {
-      spanLabelFixed: 100,
-      grid: { span: 12 },
-    },
-    $no: {
-      widget: 'text'
-    },
-    $href: {
-      widget: 'string',
-    },
-    $description: {
-      widget: 'textarea',
-      grid: { span: 24 },
-    },
-  };
+  node: any;
 
   schemaMenu: SFSchema = {
     properties: {
@@ -48,33 +20,40 @@ export class SysMenuEditComponent implements OnInit {
     required: ['menuLabel'],
   };
 
-  constructor(
-    private modal: NzModalRef,
-    private msgSrv: NzMessageService,
-    public http: _HttpClient,
-  ) { }
+  formData: {};
+
+  constructor(private modal: NzModalRef, private msgSrv: NzMessageService, public http: _HttpClient) {}
 
   ngOnInit(): void {
-    // if (this.record.id > 0)
-    //   this.http.get(`/user/${this.record.id}`).subscribe(res => (this.i = res));
-  }
-
-  save(value: any) {
-    this.http.post(`/user/${this.record.id}`, value).subscribe(res => {
-      this.msgSrv.success('保存成功');
-      this.modal.close(true);
-    });
+    if (this.menuType === 2) {
+      this.formData = { menuLabel: this.node.title, menuUrl: this.node.menuUrl };
+    }
   }
 
   close() {
     this.modal.destroy();
   }
 
+  operate(value: any) {
+    if (this.menuType === 1) {
+      this.saveMenu(value);
+    }
+    if (this.menuType === 2) {
+      this.editMenu(value);
+    }
+  }
+
   saveMenu(value: any) {
-    this.http.post(`/menu/${this.menuId}/save`, value).subscribe(res => {
+    this.http.post(`/menu/${this.node.id}/save`, value).subscribe(res => {
       this.msgSrv.success('保存成功');
       this.modal.close(true);
     });
+  }
 
+  editMenu(value: any) {
+    this.http.post(`/menu/${this.node.id}/edit`, value).subscribe(res => {
+      this.msgSrv.success('编辑成功');
+      this.modal.close(true);
+    });
   }
 }
